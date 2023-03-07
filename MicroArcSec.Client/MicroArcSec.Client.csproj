@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>42693c60-9571-4086-8851-d4be12679a88</UserSecretsId>
+    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+    <ItemGroup>
+	    <Protobuf Include="Protos\greet.proto" GrpcServices="Client" Generator="MSBuild:Compile" />
+	    <Content Include="@(Protobuf)" />
+	    <None Remove="@(Protobuf)" />
+    </ItemGroup>	
+	
+  <ItemGroup>
+    <PackageReference Include="AntDesign" Version="0.14.3" />
+    <PackageReference Include="AntDesign.Charts" Version="0.3.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.21.12" />
+    <PackageReference Include="Grpc.Core" Version="2.46.6" />
+    <PackageReference Include="Grpc.Tools" Version="2.51.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+    <PackageReference Include="Radzen.Blazor" Version="4.7.0" />
+    <PackageReference Include="YamlDotNet" Version="13.0.1" />
+  </ItemGroup>
+
+</Project>
