@@ -1,41 +1,60 @@
 ﻿@page "/"
+@using YamlDotNet.Serialization
+@using YamlDotNet.Serialization.NamingConventions
 @using MicroArcSec.Client.Data;
-@using YamlDotNet.Serialization.NamingConventions;
+@using System.IO
+@using System.Net.Http
+@using System.Threading.Tasks
 
-<PageTitle>Index</PageTitle>
+@inject NavigationManager Navigation
 
-<h1>Hello, gRPC!</h1>
+<h3>SIGMA Rules</h3>
+<div class="bg-gray-100 p-4 rounded-lg shadow-md container">
+    @if (rules is null || !rules.Any())
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        @foreach (var rule in rules)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@rule.title</h5>
+                    <p class="card-text">@rule.description</p>
+                    <p class="card-text badge bg-warning"><small class="text-muted">@rule.status | @rule.detection.level</small></p>
+                    <button class="btn btn-primary custom-button" @onclick="@(() => ViewDetails(rule))">View Details</button>
+                </div>
+            </div>
+        }
+    }
+</div>
 
-<button class="btn btn-primary" onclick="@SayHello">Say Hello</button>
-<RadzenButton Text="Hello world!" />
-<Button Type="primary">Ant, Hello World!</Button>
-<hr />
-
-<p>@Greeting</p>
-
-@functions {
-
-    private string Greeting;
+@code {
+    [Parameter]
+    public SigmaRuleModel[] rules { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        //var deserializer = new YamlDotNet.Serialization.DeserializerBuilder()
-        //    .WithNamingConvention(CamelCaseNamingConvention.Instance)
-        //    .Build();
+        //var response = await HttpClient.GetAsync("rule.yaml");
+        //var yaml = await response.Content.ReadAsStringAsync();
+        var yaml = await File.ReadAllTextAsync("H:\\sample.yaml");
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(UnderscoredNamingConvention.Instance)
+            .Build();
+        try
+        {
+            rules = deserializer.Deserialize<SigmaRuleModel[]>(yaml);
+        }
+        catch (Exception ex)
+        {
 
-        //var myConfig = deserializer.Deserialize<YamlSample>(File.ReadAllText("H:\\sample.yaml"));
+            throw;
+        }
     }
 
-
-    async Task SayHello()
+    private void ViewDetails(SigmaRuleModel rule)
     {
-        var channel = new Channel("localhost:5121", ChannelCredentials.Insecure);
-        var client = new Greeter.GreeterClient(channel);
-
-        var reply = await client.SayHelloAsync(new HelloRequest { Name = "Blazor gRPC Client" });
-        Greeting = reply.Message;
-
-        await channel.ShutdownAsync();
+        Navigation.NavigateTo($"/sigmaruledetails/{rule.id}", true);
     }
-
 }
