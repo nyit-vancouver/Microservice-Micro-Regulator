@@ -19,11 +19,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var deserializer = new YamlDotNet.Serialization.DeserializerBuilder()
-            .WithNamingConvention(CamelCaseNamingConvention.Instance)
-            .Build();
+        //var deserializer = new YamlDotNet.Serialization.DeserializerBuilder()
+        //    .WithNamingConvention(CamelCaseNamingConvention.Instance)
+        //    .Build();
 
-        var myConfig = deserializer.Deserialize<YamlSample>(File.ReadAllText("H:\\sample.yaml"));
+        //var myConfig = deserializer.Deserialize<YamlSample>(File.ReadAllText("H:\\sample.yaml"));
     }
 
 

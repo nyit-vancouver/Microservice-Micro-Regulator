@@ -6,5 +6,6 @@
         public string product { get; set; }
         public string service { get; set; }
         public string definition { get; set; }
+        public string event_id { get; set; }
     }
 }
