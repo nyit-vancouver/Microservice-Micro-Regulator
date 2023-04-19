@@ -9,7 +9,6 @@
   </PropertyGroup>
 
     <ItemGroup>
-	    <Protobuf Include="Protos\greet.proto" GrpcServices="Client" Generator="MSBuild:Compile" />
 	    <Content Include="@(Protobuf)" />
 	    <None Remove="@(Protobuf)" />
     </ItemGroup>	
@@ -17,15 +16,21 @@
   <ItemGroup>
     <PackageReference Include="AntDesign" Version="0.14.3" />
     <PackageReference Include="AntDesign.Charts" Version="0.3.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.21.12" />
+    <PackageReference Include="Google.Protobuf" Version="3.22.3" />
     <PackageReference Include="Grpc.Core" Version="2.46.6" />
-    <PackageReference Include="Grpc.Tools" Version="2.51.0">
+    <PackageReference Include="Grpc.Net.Client" Version="2.52.0" />
+	<Protobuf Include="Protos\microarc.proto" GrpcServices="Client" />
+    <PackageReference Include="Grpc.Tools" Version="2.54.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="Radzen.Blazor" Version="4.7.0" />
     <PackageReference Include="YamlDotNet" Version="13.0.1" />
+  </ItemGroup>	
+	
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

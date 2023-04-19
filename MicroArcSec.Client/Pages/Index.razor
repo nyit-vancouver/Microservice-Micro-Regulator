@@ -36,8 +36,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //var response = await HttpClient.GetAsync("rule.yaml");
-        //var yaml = await response.Content.ReadAsStringAsync();
         var yaml = await File.ReadAllTextAsync("H:\\sample.yaml");
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
