@@ -3,15 +3,18 @@
     flex-wrap: wrap;
     justify-content: flex-start;
 }
+
 .card {
     width: 18rem;
     max-width: 300px;
     min-width: 300px;
+    min-height: 350px;
     flex-basis: calc(25% - 10px);
     margin: 20px;
     box-shadow: 0px 0px 10px #ccc;
     border-radius: 10px;
     padding: 15px;
+    position: relative;
 }
 
 .card-title {
@@ -45,10 +48,24 @@
     background-color: #ffc107 !important;
 }
 
+.bg-danger {
+    background-color: #c30010 !important;
+    color: white;
+}
+
 .bg-secondary {
     background-color: #6c757d !important;
 }
 
 .custom-button:hover {
     cursor: pointer;
+}
+
+.center-button {
+    margin: 0;
+    position: absolute;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    bottom: 0;
 }

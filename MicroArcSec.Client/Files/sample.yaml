@@ -1,0 +1,24 @@
+id: '1'
+title: Windows PowerShell Script Block Logging - Multiple Script Blocks with Empty Script Block Text
+description: Detects multiple script blocks with empty script block text in Windows PowerShell script block logs, which may indicate an obfuscation technique.
+status: experimental
+logsource:
+      category: process_creation
+detection:
+      condition: >-
+          (process_command_line == '*-EncodedCommand *' || process_command_line == '*-encodedcommand *') &&
+          process_command_line !~ '*-EncodedCommand \* .*-EncodedCommand \*' &&
+          process_command_line != '*-EncodedCommand'
+      level: high
+      fields:
+          - process_command_line
+      false_positives:
+          - "Unknown"
+          - "Software development"
+      tags:
+          - "attack.t1059.001"
+          - "attack.t1027.001"
+          - "attack.t1027.002"
+          - "attack.t1059"
+          - "attack.t1059.002"
+          - "attack.t1059.003"

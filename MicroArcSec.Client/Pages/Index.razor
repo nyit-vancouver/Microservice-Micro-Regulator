@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using MicroArcSec.Client.Services;
 @using YamlDotNet.Serialization
 @using YamlDotNet.Serialization.NamingConventions
 @using MicroArcSec.Client.Data;
@@ -22,8 +23,8 @@
                 <div class="card-body">
                     <h5 class="card-title">@rule.title</h5>
                     <p class="card-text">@rule.description</p>
-                    <p class="card-text badge bg-warning"><small class="text-muted">@rule.status | @rule.detection.level</small></p>
-                    <button class="btn btn-primary custom-button" @onclick="@(() => ViewDetails(rule))">View Details</button>
+                    <p class="card-text badge @(rule.detection.level.Equals("high", StringComparison.CurrentCultureIgnoreCase) ? "bg-danger" : "bg-warning")"><small class="text-muted">@rule.status | @rule.detection.level</small></p>
+                    <button class="btn btn-primary custom-button center-button" @onclick="@(() => ViewDetails(rule))">View Details</button>
                 </div>
             </div>
         }
@@ -32,27 +33,40 @@
 
 @code {
     [Parameter]
-    public SigmaRuleModel[] rules { get; set; }
+    public List<SigmaRuleModel> rules { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var yaml = await File.ReadAllTextAsync("H:\\sample.yaml");
-        var deserializer = new DeserializerBuilder()
-            .WithNamingConvention(UnderscoredNamingConvention.Instance)
-            .Build();
-        try
-        {
-            rules = deserializer.Deserialize<SigmaRuleModel[]>(yaml);
-        }
-        catch (Exception ex)
-        {
+        rules = new List<SigmaRuleModel>();
 
-            throw;
+        // specify the directory path
+        string directoryPath = @".\Files\";
+
+        // get all the files in the directory
+        string[] fileEntries = Directory.GetFiles(directoryPath);
+
+        foreach (string fileName in fileEntries)
+        {
+            var yaml = await File.ReadAllTextAsync(fileName);
+            var deserializer = new DeserializerBuilder()
+                .WithNamingConvention(UnderscoredNamingConvention.Instance)
+                .Build();
+            try
+            {
+                var rule = deserializer.Deserialize<SigmaRuleModel>(yaml);
+                rule.fileName = fileName.Replace(".\\Files\\", "").Replace(".yaml", "");
+                rules.Add(rule);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
     }
 
     private void ViewDetails(SigmaRuleModel rule)
     {
-        Navigation.NavigateTo($"/sigmaruledetails/{rule.id}", true);
+        Navigation.NavigateTo($"/sigmaruledetails/{rule.fileName}", true);
     }
 }

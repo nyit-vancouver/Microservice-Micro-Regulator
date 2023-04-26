@@ -6,6 +6,7 @@ namespace MicroArcSec.Client.Data
 {
     public class SigmaRuleModel
     {
+        public string fileName { get; set; }
         public string title { get; set; }
         public string id { get; set; }
         public RelatedSigmaRule related { get; set; }
