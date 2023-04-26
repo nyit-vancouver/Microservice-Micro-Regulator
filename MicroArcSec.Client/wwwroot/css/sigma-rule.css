@@ -69,3 +69,44 @@
     transform: translate(-50%, -50%);
     bottom: 0;
 }
+
+.detail-header {
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: 900;
+    background-color: cornsilk;
+}
+
+.detail-header-desciption {
+    font-weight: 700;
+    font-style: italic;
+    margin-left: 25px !important;
+    color: #727272;
+}
+
+.detail-body {
+    border: 5px dashed lightgrey;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.dashed-border-button {
+    border: 5px dashed lightgrey; /* Width and style of the border */
+    border-radius: 10px;
+    background-color: #ffffff; /* Background color of the button */
+    color: #525252; /* Text color of the button */
+    padding: 10px 20px; /* Space between text and border */
+    font-size: 16px; /* Font size of the text */
+    cursor: pointer; /* Change cursor on hover */
+    transition: all 0.3s ease-in-out; /* Smooth transition on hover */
+    margin-bottom: 25px;
+    width: 100%;
+    font-weight: 900;
+    font-size: 35px;
+}
+
+.dashed-border-button:hover {
+    background-color: #b0b0b0; /* Change background color on hover */
+    color: #ffffff; /* Change text color on hover */
+    border-color: #ffffff; /* Change border color on hover */
+}
