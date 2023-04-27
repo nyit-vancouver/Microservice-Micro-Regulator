@@ -40,7 +40,7 @@
         rules = new List<SigmaRuleModel>();
 
         // specify the directory path
-        string directoryPath = @".\Files\";
+        string directoryPath = @"./Files/";
 
         // get all the files in the directory
         string[] fileEntries = Directory.GetFiles(directoryPath);
@@ -54,7 +54,7 @@
             try
             {
                 var rule = deserializer.Deserialize<SigmaRuleModel>(yaml);
-                rule.fileName = fileName.Replace(".\\Files\\", "").Replace(".yaml", "");
+                rule.fileName = fileName.Replace("./Files/", "").Replace(".yaml", "");
                 rules.Add(rule);
             }
             catch (Exception ex)

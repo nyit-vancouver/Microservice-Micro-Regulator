@@ -132,7 +132,7 @@ else
 
     private SigmaRuleModel GetRuleById(string fileName)
     {
-        var yaml = File.ReadAllText(@".\Files\" + fileName + ".yaml");
+        var yaml = File.ReadAllText(@"./Files/" + fileName + ".yaml");
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .Build();
