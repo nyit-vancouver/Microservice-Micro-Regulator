@@ -1,5 +1,7 @@
+using MicroArcSec.Client;
 using MicroArcSec.Client.Data;
 using MicroArcSec.Client.Services;
+using Microsoft.AspNetCore.SignalR.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,10 +12,23 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddAntDesign();
 
 builder.Services.AddGrpc();
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<HubConnection>(_ => new HubConnectionBuilder()
+    .WithUrl("http://localhost:44330/FileReceiverHub")
+    .Build());
 
 var app = builder.Build();
 
 app.MapGrpcService<FileTransferService>();
+
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    //endpoints.MapGrpcService<FileTransferService>();
+
+    endpoints.MapHub<FileReceiverHub>("/FileReceiverHub");
+});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using MicroArcSec.Client.Services;
+@using Microsoft.AspNetCore.SignalR.Client;
 @using YamlDotNet.Serialization
 @using YamlDotNet.Serialization.NamingConventions
 @using MicroArcSec.Client.Data;
@@ -8,6 +9,7 @@
 @using System.Threading.Tasks
 
 @inject NavigationManager Navigation
+@inject HubConnection HubConnection
 
 <h3>SIGMA Rules</h3>
 <div class="bg-gray-100 p-4 rounded-lg shadow-md container">
@@ -37,6 +39,14 @@
 
     protected override async Task OnInitializedAsync()
     {
+        HubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/FileReceiverHub"))
+            .Build();
+
+        HubConnection.On<string>("ReceiveFile", OnReceiveMessage);
+
+        await HubConnection.StartAsync();
+
         rules = new List<SigmaRuleModel>();
 
         // specify the directory path
@@ -65,8 +75,37 @@
         }
     }
 
+    private async Task OnReceiveMessage(string fileName)
+    {
+        rules.Add(GetRuleByName(fileName));
+        await InvokeAsync(StateHasChanged);
+    }
+
     private void ViewDetails(SigmaRuleModel rule)
     {
-        Navigation.NavigateTo($"/sigmaruledetails/{rule.fileName}", true);
+        Navigation.NavigateTo($"/sigmaruledetails/{rule.fileName}", true);        
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await HubConnection.DisposeAsync();
+    }
+
+    private SigmaRuleModel GetRuleByName(string fileName)
+    {
+        var yaml = File.ReadAllText(@"./Files/" + fileName);
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(UnderscoredNamingConvention.Instance)
+            .Build();
+        try
+        {
+            var rule = deserializer.Deserialize<SigmaRuleModel>(yaml);
+            return rule;
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
     }
 }

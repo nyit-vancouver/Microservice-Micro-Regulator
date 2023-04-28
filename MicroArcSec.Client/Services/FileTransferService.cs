@@ -1,11 +1,19 @@
 ﻿using Grpc.Core;
 using Grpc.Core.Utils;
 using GrpcFileService;
+using Microsoft.AspNetCore.SignalR;
 
 namespace MicroArcSec.Client.Services
 {
     public class FileTransferService : FileTransfer.FileTransferBase
     {
+        private readonly IHubContext<FileReceiverHub> _hubContext;
+
+        public FileTransferService(IHubContext<FileReceiverHub> hubContext)
+        {
+            _hubContext = hubContext;
+        }
+
         public override async Task<SendStatus> SendFile(IAsyncStreamReader<SendFileRequest> requestStream, ServerCallContext context)
         {
             string filename = "";
@@ -27,6 +35,8 @@ namespace MicroArcSec.Client.Services
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 await memoryStream.CopyToAsync(fileStream);
             }
+
+            await _hubContext.Clients.All.SendAsync("ReceiveFile", filename);
 
             return await Task.FromResult(new SendStatus
             {
