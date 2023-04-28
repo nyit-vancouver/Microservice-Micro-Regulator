@@ -28,8 +28,11 @@ namespace MicroArcSec.Client.Services
                 await memoryStream.CopyToAsync(fileStream);
             }
 
-            // Return a success response
-            return new SendStatus { Success = true, Message = "File uploaded successfully" };
+            return await Task.FromResult(new SendStatus
+            {
+                Success = true,
+                Message = "File uploaded successfully"
+            });
         }
     }
 }

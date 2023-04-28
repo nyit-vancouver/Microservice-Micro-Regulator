@@ -1,6 +1,5 @@
 using MicroArcSec.Client.Data;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using MicroArcSec.Client.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +9,11 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddAntDesign();
 
+builder.Services.AddGrpc();
+
 var app = builder.Build();
+
+app.MapGrpcService<FileTransferService>();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
