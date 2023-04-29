@@ -35,7 +35,6 @@ builder.WebHost.ConfigureKestrel(options =>
     });
 });
 
-
 var app = builder.Build();
 
 app.MapGrpcService<FileTransferService>();
