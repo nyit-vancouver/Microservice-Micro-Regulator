@@ -4,6 +4,7 @@ using MicroArcSec.Client.Data;
 using MicroArcSec.Client.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.SignalR.Client;
+using System.Reflection.PortableExecutable;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +29,7 @@ builder.Services.AddSingleton<HubConnection>(_ => new HubConnectionBuilder()
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(5001, listenOptions =>
+    options.ListenAnyIP(80, listenOptions =>
     {
         listenOptions.Protocols = HttpProtocols.Http2;
     });
