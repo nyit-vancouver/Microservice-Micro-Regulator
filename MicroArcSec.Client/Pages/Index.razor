@@ -77,7 +77,7 @@
 
     private async Task OnReceiveMessage(string fileName)
     {
-        rules.Add(GetRuleByName(fileName));
+        rules.Add(GetRuleByName(fileName.Replace(".yaml", "")));
         await InvokeAsync(StateHasChanged);
     }
 
@@ -93,13 +93,14 @@
 
     private SigmaRuleModel GetRuleByName(string fileName)
     {
-        var yaml = File.ReadAllText(@"./Files/" + fileName);
+        var yaml = File.ReadAllText(@"./Files/" + fileName + ".yaml");
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .Build();
         try
         {
             var rule = deserializer.Deserialize<SigmaRuleModel>(yaml);
+            rule.fileName = fileName;
             return rule;
         }
         catch (Exception ex)

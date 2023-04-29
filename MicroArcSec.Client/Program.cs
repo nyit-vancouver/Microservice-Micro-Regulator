@@ -14,7 +14,7 @@ builder.Services.AddAntDesign();
 builder.Services.AddGrpc();
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<HubConnection>(_ => new HubConnectionBuilder()
-    .WithUrl("https://microarcsecportal.azurewebsites.net/FileReceiverHub")
+    .WithUrl("https://microarcsecportal.azurewebsites.net:443/FileReceiverHub")
     .Build());
 
 var app = builder.Build();
