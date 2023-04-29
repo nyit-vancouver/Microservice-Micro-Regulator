@@ -8,6 +8,11 @@
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Files\sample.yaml" />
+    <None Remove="Files\sample01.yaml" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<Protobuf Include="Protos\microarc.proto" GrpcServices="Server" />
 	</ItemGroup>	
@@ -27,6 +32,15 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="Radzen.Blazor" Version="4.7.0" />
     <PackageReference Include="YamlDotNet" Version="13.0.1" />
+  </ItemGroup>	
+	
+  <ItemGroup>
+    <Resource Include="Files\sample.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Files\sample01.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

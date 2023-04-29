@@ -26,13 +26,13 @@ builder.Services.AddSingleton<HubConnection>(_ => new HubConnectionBuilder()
     .Build());
 
 
-//builder.WebHost.ConfigureKestrel(options =>
-//{
-//    options.ListenAnyIP(5001, listenOptions =>
-//    {
-//        listenOptions.Protocols = HttpProtocols.Http2;
-//    });
-//});
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5001, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http2;
+    });
+});
 
 
 var app = builder.Build();
