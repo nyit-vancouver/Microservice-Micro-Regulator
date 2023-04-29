@@ -1,6 +1,8 @@
+using Grpc.Net.Client;
 using MicroArcSec.Client;
 using MicroArcSec.Client.Data;
 using MicroArcSec.Client.Services;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.SignalR.Client;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,11 +13,27 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddAntDesign();
 
-builder.Services.AddGrpc();
+builder.Services.AddGrpc(options =>
+{
+    options.EnableDetailedErrors = true;
+});
+
+AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<HubConnection>(_ => new HubConnectionBuilder()
-    .WithUrl("https://microarcsecportal.azurewebsites.net:443/FileReceiverHub")
+    .WithUrl("http://microarcsecportal.azurewebsites.net:443/FileReceiverHub")
     .Build());
+
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5001, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http2;
+    });
+});
+
 
 var app = builder.Build();
 
