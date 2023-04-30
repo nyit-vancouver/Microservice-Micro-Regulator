@@ -2,6 +2,7 @@ id: 32dbcd7a-fdb3-479c-8dc7-c58403babf13
 title: Privileged User Has Been Created
 description: Detects the addition of a new user to a privileged group such as "root" or "sudo"
 author: Pawel Mazur
+date: 2023-03-21 18:28:45
 logsource:
     product: linux
 status: experimental

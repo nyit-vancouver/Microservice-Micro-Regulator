@@ -1,8 +1,7 @@
 ﻿@page "/sigmaruledetails/{fileName}"
+@using MicroArcSec.Client.Classes;
 @using Microsoft.AspNetCore.Components;
 @using MicroArcSec.Client.Data;
-@using YamlDotNet.Serialization;
-@using YamlDotNet.Serialization.NamingConventions;
 
 @inject NavigationManager Navigation
 
@@ -21,6 +20,10 @@ else
             <div>
                 <h3 class="text-xl font-bold mb-2">Status:</h3>
                 <p class="text-gray-500" style="padding-left:25px">@Model.status</p>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold mb-2">Date:</h3>
+                <p class="text-gray-500" style="padding-left:25px">@Model.date?.ToString("yyyy/MM/dd hh:mm:ss")</p>
             </div>
             <div class="mt-4">
                 <h3 class="text-xl font-bold mb-2">Logsource</h3>
@@ -126,27 +129,9 @@ else
 
     protected override void OnInitialized()
     {
-        Model = GetRuleById(FileName);
+        Model = Tools.GetRuleByName(FileName);
         base.OnInitialized();
-    }
-
-    private SigmaRuleModel GetRuleById(string fileName)
-    {
-        var yaml = File.ReadAllText(@"./Files/" + fileName + ".yaml");
-        var deserializer = new DeserializerBuilder()
-            .WithNamingConvention(UnderscoredNamingConvention.Instance)
-            .Build();
-        try
-        {
-            var rule = deserializer.Deserialize<SigmaRuleModel>(yaml);
-            return rule;
-        }
-        catch (Exception ex)
-        {
-
-            throw;
-        }
-    }
+    }    
 
     void GoBack()
     {

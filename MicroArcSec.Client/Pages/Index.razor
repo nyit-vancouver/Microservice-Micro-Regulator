@@ -1,17 +1,14 @@
 ﻿@page "/"
-@using MicroArcSec.Client.Services;
+@using MicroArcSec.Client.Classes;
 @using Microsoft.AspNetCore.SignalR.Client;
-@using YamlDotNet.Serialization
-@using YamlDotNet.Serialization.NamingConventions
 @using MicroArcSec.Client.Data;
-@using System.IO
 @using System.Net.Http
 @using System.Threading.Tasks
 
 @inject NavigationManager Navigation
 @inject HubConnection HubConnection
 
-<h3>SIGMA Rules</h3>
+<h3>SIGMA Rules TOP 5</h3>
 <div class="bg-gray-100 p-4 rounded-lg shadow-md container">
     @if (rules is null || !rules.Any())
     {
@@ -25,6 +22,7 @@
                 <div class="card-body">
                     <h5 class="card-title">@rule.title</h5>
                     <p class="card-text">@rule.description</p>
+                    <p><i class="fas fa-clock"></i> @rule.date?.ToString("yyyy/MM/dd hh:mm:ss")</p>
                     <p class="card-text badge @(rule.detection.level.Equals("high", StringComparison.CurrentCultureIgnoreCase) ? "bg-danger" : "bg-warning")"><small class="text-muted">@rule.status | @rule.detection.level</small></p>
                     <button class="btn btn-primary custom-button center-button" @onclick="@(() => ViewDetails(rule))">View Details</button>
                 </div>
@@ -37,47 +35,26 @@
     [Parameter]
     public List<SigmaRuleModel> rules { get; set; }
 
+    private async Task LoadData()
+    {
+        rules = await Tools.GetAllRules();
+        rules = rules.Skip(0).Take(5).ToList();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         HubConnection = new HubConnectionBuilder()
             .WithUrl(Navigation.ToAbsoluteUri("/FileReceiverHub"))
             .Build();
-
         HubConnection.On<string>("ReceiveFile", OnReceiveMessage);
-
         await HubConnection.StartAsync();
 
-        rules = new List<SigmaRuleModel>();
-
-        // specify the directory path
-        string directoryPath = @"./Files/";
-
-        // get all the files in the directory
-        string[] fileEntries = Directory.GetFiles(directoryPath);
-
-        foreach (string fileName in fileEntries)
-        {
-            var yaml = await File.ReadAllTextAsync(fileName);
-            var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(UnderscoredNamingConvention.Instance)
-                .Build();
-            try
-            {
-                var rule = deserializer.Deserialize<SigmaRuleModel>(yaml);
-                rule.fileName = fileName.Replace("./Files/", "").Replace(".yaml", "");
-                rules.Add(rule);
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-        }
+        await LoadData();
     }
 
     private async Task OnReceiveMessage(string fileName)
     {
-        rules.Add(GetRuleByName(fileName.Replace(".yaml", "")));
+        await LoadData();
         await InvokeAsync(StateHasChanged);
     }
 
@@ -89,24 +66,5 @@
     public async ValueTask DisposeAsync()
     {
         await HubConnection.DisposeAsync();
-    }
-
-    private SigmaRuleModel GetRuleByName(string fileName)
-    {
-        var yaml = File.ReadAllText(@"./Files/" + fileName + ".yaml");
-        var deserializer = new DeserializerBuilder()
-            .WithNamingConvention(UnderscoredNamingConvention.Instance)
-            .Build();
-        try
-        {
-            var rule = deserializer.Deserialize<SigmaRuleModel>(yaml);
-            rule.fileName = fileName;
-            return rule;
-        }
-        catch (Exception ex)
-        {
-
-            throw;
-        }
-    }
+    }    
 }

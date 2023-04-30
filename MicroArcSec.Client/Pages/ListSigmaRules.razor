@@ -1,0 +1,124 @@
+﻿@page "/mytable"
+@using MicroArcSec.Client.Classes;
+@using Microsoft.AspNetCore.SignalR.Client;
+@using MicroArcSec.Client.Data;
+@using System.Net.Http
+@using System.Threading.Tasks
+
+@inject NavigationManager Navigation
+@inject HubConnection HubConnection
+@inject IJSRuntime jsRuntime
+
+
+@if (displayedRecords is null || !displayedRecords.Any())
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Date Time <i class="fas fa-clock"></i></th>
+                <th>Level <i class="fas fa-exclamation-triangle"></i></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in displayedRecords)
+            {
+                <tr id="row-@rowNumber">
+                    <td>@rowNumber</td>
+                    <td>@record.title</td>
+                    <td>@record.status</td>
+                    <td>@record.date?.ToString("yyyy/MM/dd hh:mm:ss")</td>
+                    <td>
+                        @if (record.detection.level.ToUpper() == "HIGH")
+                        {
+                           <span class="high-level">@record.detection.level</span>
+                        }
+                        else if (record.detection.level.ToUpper() == "MEDIUM")
+                        {
+                            <span class="medium-level">@record.detection.level</span>
+                        }
+                        else
+                        {
+                            <span class="low-level">@record.detection.level</span>
+                        }
+                    </td>
+                </tr>                
+                rowNumber++;
+            }
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <button class="page-button" disabled=@IsPreviousButtonDisabled @onclick="() => ChangePageAsync(-1)">Previous</button>
+        <button class="page-button" disabled=@IsNextButtonDisabled @onclick="() => ChangePageAsync(1)">Next</button>
+    </div>
+}
+@code {
+    [Parameter]
+    public List<SigmaRuleModel> displayedRecords { get; set; }
+
+    [Parameter]
+    public List<SigmaRuleModel> newFiles { get; set; }
+
+    private List<SigmaRuleModel> rules;
+
+    private int currentPage = 1;
+    private int pageSize = 5;
+    private int totalPages;
+    bool IsPreviousButtonDisabled = false;
+    bool IsNextButtonDisabled = false;
+    int rowNumber;
+
+    protected override async Task OnInitializedAsync()
+    {
+        newFiles = new List<SigmaRuleModel>();
+        newFiles.Add(new SigmaRuleModel() { fileName="bijan"});
+        HubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/FileReceiverHub"))
+            .Build();
+
+        HubConnection.On<string>("ReceiveFile", OnReceiveMessage);
+
+        await HubConnection.StartAsync();
+
+        await UpdateRecordsAsync();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            // Call the removeHighlight function after the component is rendered
+            jsRuntime.InvokeVoidAsync("highlightNewRow", 1);
+        }
+    }
+
+    private async Task UpdateRecordsAsync()
+    {
+        rules = await Tools.GetAllRules();
+        totalPages = (int)Math.Ceiling((decimal)rules.Count / pageSize);
+        IsPreviousButtonDisabled = currentPage == 1;
+        IsNextButtonDisabled = currentPage == totalPages;
+        displayedRecords = rules.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+        rowNumber = ((currentPage - 1) * pageSize) + 1;
+    }
+
+    private async Task ChangePageAsync(int delta)
+    {
+        currentPage += delta;
+        await UpdateRecordsAsync();
+    }
+
+    private async Task OnReceiveMessage(string fileName)
+    {
+        newFiles.Add(Tools.GetRuleByName(fileName.Replace(".yaml", "")));
+        await UpdateRecordsAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+}

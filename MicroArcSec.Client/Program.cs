@@ -23,17 +23,17 @@ AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport
 
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<HubConnection>(_ => new HubConnectionBuilder()
-    .WithUrl("http://microarcsecportal.azurewebsites.net:443/FileReceiverHub")
+    .WithUrl("https://microarcsecportal.azurewebsites.net:443/FileReceiverHub")
     .Build());
 
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(80, listenOptions =>
-    {
-        listenOptions.Protocols = HttpProtocols.Http2;
-    });
-});
+//builder.WebHost.ConfigureKestrel(options =>
+//{
+//    options.ListenAnyIP(80, listenOptions =>
+//    {
+//        listenOptions.Protocols = HttpProtocols.Http2;
+//    });
+//});
 
 var app = builder.Build();
 

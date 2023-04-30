@@ -20,5 +20,6 @@ namespace MicroArcSec.Client.Data
         public string falsepositives { get; set; }
         public string level { get; set; }
         public string tags { get; set; }
+        public DateTime? date { get; set; }
     }
 }
