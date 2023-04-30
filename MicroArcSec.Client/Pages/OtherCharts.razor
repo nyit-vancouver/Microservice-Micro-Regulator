@@ -1,0 +1,191 @@
+﻿@page "/othercharts"
+
+<PageTitle>Charts</PageTitle>
+
+<h1>Charts</h1>
+
+<GridRow>
+    <GridCol Span="8">
+        <RadzenChart>
+            <RadzenColumnSeries Data="@revenue" CategoryProperty="Quarter" ValueProperty="Revenue" />
+            <RadzenValueAxis Min="0" Max="400000" Step="100000" />
+        </RadzenChart>
+    </GridCol>
+    <GridCol Span="8">
+        <RadzenChart>
+            <RadzenColumnSeries Data="@revenue" CategoryProperty="Quarter" ValueProperty="Revenue" />
+            <RadzenValueAxis>
+                <RadzenGridLines Visible="true" />
+            </RadzenValueAxis>
+            <RadzenCategoryAxis>
+                <RadzenGridLines Visible="true" />
+            </RadzenCategoryAxis>
+        </RadzenChart>
+    </GridCol>
+    <GridCol Span="8">
+        <Bar Data="data" Config="barConfig" />
+    </GridCol>
+</GridRow>
+<GridRow>
+    <GridCol Span="8">
+        <Line Data="data" Config="lineConfig" />
+    </GridCol>
+    <GridCol Span="8">
+        <Pie Data="data1" Config="config1" />
+    </GridCol>
+    <GridCol Span="8">
+        <Pie Data="data1" Config="config1" />
+    </GridCol>
+</GridRow>
+
+@code {
+    class DataItem
+    {
+        public string Quarter { get; set; }
+        public double Revenue { get; set; }
+    }
+
+    DataItem[] revenue = new DataItem[]
+    {
+      new DataItem { Quarter = "Q1", Revenue = 234000 },
+      new DataItem { Quarter = "Q2", Revenue = 284000 },
+      new DataItem { Quarter = "Q3", Revenue = 274000 },
+      new DataItem { Quarter = "Q4", Revenue = 294000 }
+    };
+
+    readonly BarConfig config2 = new BarConfig
+        {
+            Title = new AntDesign.Charts.Title
+            {
+                Visible = true,
+                Text = "Demo"
+            },
+            AutoFit = true,
+            XField = "Time",
+            YField = "Quantity",
+            Label = new BarViewConfigLabel
+            {
+                Visible = true
+            }
+        };
+
+    object[] data = new object[] {
+        new  { year= "1991", value= 3 },
+        new  { year= "1992", value= 4 },
+        new  { year= "1993", value= 3.5 },
+        new  { year= "1994", value= 5 },
+        new  { year= "1995", value= 4.9 },
+        new  { year= "1996", value= 6 },
+        new  { year= "1997", value= 7 },
+        new  { year= "1998", value= 9 },
+        new  { year= "1999", value= 13 },
+};
+
+    BarConfig barConfig = new BarConfig()
+        {
+            Padding = "auto",
+            AutoFit = true,
+            XField = "year",
+            YField = "value",
+        };
+
+    LineConfig lineConfig = new LineConfig()
+        {
+            Padding = "auto",
+            AutoFit = true,
+            XField = "year",
+            YField = "value",
+        };
+
+    readonly GaugeConfig gaugeConfig = new GaugeConfig
+        {
+            Title = new AntDesign.Charts.Title
+            {
+                Visible = true,
+                Text = "刻度仪表盘"
+            },
+            Width = 400,
+            Height = 400,
+            Data = 40,
+            Min = 0,
+            Max = 100,
+            Range = new double[] { 0, 25, 50, 75, 100 },
+
+
+            Statistic = new GaugeStatistic
+            {
+                Visible = true,
+                Text = "良",
+                Color = "#faad14",
+            },
+            Color = new[] { "#39B8FF", "#52619B", "#43E089", "#C0EDF3" },
+        };
+
+    readonly LiquidConfig liquidConfig = new LiquidConfig
+        {
+            Min = 0,
+            Max = 10000,
+            Percent = 5639
+        };
+
+    object[] data3 = new object[49];
+
+    protected override async Task OnInitializedAsync()
+    {
+        for (int i = 1; i < 50; i++)
+        {
+            Random rd = new Random();
+            data3[i - 1] = new { type = $"分类 {i}", value = rd.Next(0, 10) + 1 };
+        }
+
+        await base.OnInitializedAsync();
+
+    }
+
+    readonly object[] data1 =
+    {
+        new
+        {
+            type = "Category One",
+            value = 27
+        },
+        new
+        {
+            type = "Category Two",
+            value = 25
+        },
+        new
+        {
+            type = "Category Three",
+            value = 18
+        },
+        new
+        {
+            type = "Category Four",
+            value = 15
+        },
+        new
+        {
+            type = "Category Five",
+            value = 10
+        },
+        new
+        {
+            type = "Other",
+            value = 5
+        }
+    };
+
+    readonly PieConfig config1 = new PieConfig
+        {
+            AutoFit = true,
+            Radius = 0.8,
+            AngleField = "value",
+            ColorField = "type",
+            Label = new PieLabelConfig
+            {
+                Visible = true,
+                Type = "inner"
+            }
+        };
+}
