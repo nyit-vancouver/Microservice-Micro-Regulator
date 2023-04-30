@@ -1,4 +1,4 @@
-﻿@page "/mytable"
+﻿@page "/logslist"
 @using MicroArcSec.Client.Classes;
 @using Microsoft.AspNetCore.SignalR.Client;
 @using MicroArcSec.Client.Data;
@@ -21,6 +21,7 @@ else
             <tr>
                 <th>No.</th>
                 <th>Title</th>
+                <th>Description</th>
                 <th>Status</th>
                 <th>Date Time <i class="fas fa-clock"></i></th>
                 <th>Level <i class="fas fa-exclamation-triangle"></i></th>
@@ -30,11 +31,12 @@ else
             @foreach (var record in displayedRecords)
             {
                 <tr id="row-@rowNumber">
-                    <td>@rowNumber</td>
+                    <td style="min-width:50px;text-align:center;">@rowNumber</td>
                     <td>@record.title</td>
-                    <td>@record.status</td>
-                    <td>@record.date?.ToString("yyyy/MM/dd hh:mm:ss")</td>
-                    <td>
+                    <td>@record.description</td>
+                    <td style="text-align:center;">@record.status</td>
+                    <td style="text-align:center;">@record.date?.ToString("yyyy/MM/dd hh:mm:ss")</td>
+                    <td style="text-align:center;">
                         @if (record.detection.level.ToUpper() == "HIGH")
                         {
                            <span class="high-level">@record.detection.level</span>
@@ -55,6 +57,7 @@ else
     </table>
 
     <div class="pagination">
+        <p style="margin-top:10px;">Page @currentPage of @totalPages</p>
         <button class="page-button" disabled=@IsPreviousButtonDisabled @onclick="() => ChangePageAsync(-1)">Previous</button>
         <button class="page-button" disabled=@IsNextButtonDisabled @onclick="() => ChangePageAsync(1)">Next</button>
     </div>
@@ -78,7 +81,6 @@ else
     protected override async Task OnInitializedAsync()
     {
         newFiles = new List<SigmaRuleModel>();
-        newFiles.Add(new SigmaRuleModel() { fileName="bijan"});
         HubConnection = new HubConnectionBuilder()
             .WithUrl(Navigation.ToAbsoluteUri("/FileReceiverHub"))
             .Build();
@@ -92,9 +94,9 @@ else
 
     protected override void OnAfterRender(bool firstRender)
     {
-        if (!firstRender)
+        if (!firstRender && newFiles.Count > 0)
         {
-            // Call the removeHighlight function after the component is rendered
+            newFiles = new List<SigmaRuleModel>();
             jsRuntime.InvokeVoidAsync("highlightNewRow", 1);
         }
     }
