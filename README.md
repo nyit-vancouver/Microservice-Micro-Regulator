@@ -3,8 +3,7 @@
 ## ✔️Output
 https://microarcsecportal.azurewebsites.net/
 
-## ✔️ How to read log file?
-you need use this repository https://github.com/Arsh1101/VigilantGuard that create log.
+
 ## ✔️ Features
 - This dashboat can read logs that Uses eBPF to capture data. 🐝
 - This dashboard can deserialize yaml file to the model and save it in your local server.
@@ -27,7 +26,9 @@ At the first phase we are going to implement a prototype with monitoring and set
 - Mobile-Friendly: Dashboard is optimized for mobile devices.
 
 ## ✔️ How to use
-it is open source. so fill free to download and use this code. we will be happy to get feedcback from you to improve our product.
+This application could receive SigmaRule log files through gRPC. we have sampple applicatio that send log file to the portal application via this protocol that you can download it at this repository nyit-vancouver/SendFileRep.
+
+It is open source. So feel free to download and use this code. we will be happy to get feedcback from you to improve our product.
 
 ## ✔️ TODO
 - Alerting and notifications: The dashboard should provide alerts and notifications when certain eBPF metrics exceed defined thresholds, helping users quickly identify and address issues.
