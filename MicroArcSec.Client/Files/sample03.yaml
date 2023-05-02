@@ -1,0 +1,13 @@
+id: '3'
+title: "Detect suspicious PowerShell command-line arguments"
+status: stable
+date: 2023-03-22 09:15:53
+logsource:
+  product: windows
+detection:
+  level: low
+  selection:
+    cmd:
+      - "*?([Ww][Ii][Nn][Dd][Oo][Ww][Ss]\\*?)[Pp][Oo][Ww][Ee][Rr][Ss][Hh][Ee][Ll][Ll]\\*?"
+      - "*?([Ww][Ii][Nn][Dd][Oo][Ww][Ss]\\*?)[Ss][Yy][Ss][Tt][Ee][Mm]32\\*?[Cc][Mm][Dd][.]?[Ee][Xx][Ee]*?"
+  condition: selection

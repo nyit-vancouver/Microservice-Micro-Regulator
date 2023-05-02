@@ -1,0 +1,18 @@
+id: 21502cf4-8d0f-4638-a40c-de565cb1f001
+title: Privileged User Has Been Created
+description: Detects the addition of a new user to a privileged group such as "root" or "sudo"
+author: Pawel Mazur
+date: 2023-03-27 10:25:13
+logsource:
+    product: linux
+status: experimental
+detection:
+  condition:
+      1-> On cpu 00 sudo ran - 5090 /usr/bin/whoami -> user - 0
+  false_positives:
+      - Administrative activity
+  level: high
+  tags:
+      - attack.persistence
+      - attack.t1136.001
+      - attack.t1098

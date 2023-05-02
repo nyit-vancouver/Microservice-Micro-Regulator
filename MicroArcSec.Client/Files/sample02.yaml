@@ -1,0 +1,12 @@
+id: '2'
+title: "Detect HTTP traffic to a known malware site upload test"
+status: experimental
+date: 2023-03-22 08:05:44
+logsource:
+  category: webserver
+detection:
+  level: low
+  selection:
+    curi:
+      - "/malware-site.com"
+  condition: selection

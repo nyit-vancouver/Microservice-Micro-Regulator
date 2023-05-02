@@ -1,0 +1,10 @@
+id: '5'
+title: "Detect port scanning activity"
+status: experimental
+date: 2023-03-25 19:15:33
+logsource:
+  category: firewall
+detection:
+  condition: >-
+    source.port < 1024 and count() >= 10 and count_unique(destination.ip) >= 5
+  level: medium
