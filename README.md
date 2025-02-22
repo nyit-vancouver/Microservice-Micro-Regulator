@@ -1,5 +1,4 @@
-# Vigilant Guard 🛡️
-VigilantGuard is a lightweight security monitoring service that uses Go and eBPF to produce SIGMA rules with a communication module to collect logs in distributed environments. The primary purpose of VigilantGuard is to mitigate microservice architecture risks by collecting standard SIGMA rules. ✅
+# Microservice Micro-Regulator: A Light Weight Tool for Monitoring and Security Compliance in Microservice Architecture.
 
 This repository is based on [VigilantGuard](https://github.com/Arsh1101/VigilantGuard) project. 📌
 
@@ -8,6 +7,9 @@ To set up your server you can change the configuration of gRPC. The default conf
 Whenever you need to use this app use the 'make' command to create the executable file and run it under the **root** privilege.
 
 This application stores logs in the `/var/log/vigilant-guard/` location.
+
+# Vigilant Guard 🛡️
+VigilantGuard is a lightweight security monitoring service that uses Go and eBPF to produce SIGMA rules with a communication module to collect logs in distributed environments. The primary purpose of VigilantGuard is to mitigate microservice architecture risks by collecting standard SIGMA rules. ✅
 
 ## Features
 - Uses eBPF to capture data. 🐝
